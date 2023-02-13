@@ -1,9 +1,11 @@
 import BaseLayout from "@/components/BaseLayout/BaseLayout";
 import { MenuIcon } from "@/components/Icons/MenuIcons";
+import DeallSelect from "@/components/Select/Select";
 import Table from "@/components/Table/Table";
 import Toolbar from "@/components/Toolbar/Toolbar";
 import { columns } from "@/constant/productColumn";
 import { ProductService } from "@/Services/ProductService";
+import { SelectChangeEvent } from "@mui/material/Select";
 import { GridColDef } from "@mui/x-data-grid";
 import Head from "next/head";
 import Image from "next/image";
@@ -31,7 +33,8 @@ const userData = {
 export default function Home() {
   const [product, setProduct] = useState([]);
   const [search, setSearch] = useState();
-  const [categories, setCategories] = useState();
+  const [categories, setCategories] = useState([]);
+  const [selectedCateg, setSelectedCateg] = useState('');
 
   const productService = new ProductService();
 
@@ -39,6 +42,11 @@ export default function Home() {
     const res = (await productService.getProductSearch(search)).data;
     setProduct(res.products);
   };
+
+  const handleCategFilter = async (c: any) => {
+    const res = (await productService.getProductFilter(c)).data;
+    setProduct(res.products);
+  }
 
   const handleSearchChange = (e: any) => {
     e.preventDefault();
@@ -51,6 +59,11 @@ export default function Home() {
       handleSearchClick();
     }
   }
+
+    const handleChange = (event: SelectChangeEvent) => {
+      setSelectedCateg(event.target.value);
+      handleCategFilter(event.target.value);
+    };
 
   useEffect(() => {
     async function getProduct() {
@@ -95,7 +108,15 @@ export default function Home() {
           headerData={userData}
         >
           {/* <div className="bg-basic-12 h-24 w-full mb-4"></div> */}
-          <Toolbar onChange={handleSearchChange} onClick={handleSearchClick} onSubmit={handleSubmit} />
+          <Toolbar onChange={handleSearchChange} onClick={handleSearchClick} onSubmit={handleSubmit}>
+            <DeallSelect 
+              label="Categories"
+              options={categories}
+              value={selectedCateg}
+              handleChange = {handleChange}
+
+            />
+          </Toolbar>
 
           <Table rows={productRows} columns={columns} />
         </BaseLayout>

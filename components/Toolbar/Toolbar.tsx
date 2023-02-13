@@ -1,17 +1,21 @@
+import { SelectChangeEvent } from "@mui/material/Select";
+import { Children } from "react";
 import SearchBox from "../SearchBox/SearchBox";
+import DeallSelect from "../Select/Select";
 
 interface ToolbarProps {
     onChange?: (key: any) => void;
     onClick? : () => void;
     onSubmit? : (value: any) => void;
+    children? : React.ReactNode;
   }
 
 
-const Toolbar = ({onChange, onClick, onSubmit} : ToolbarProps) => {
+const Toolbar = ({onChange, onClick, onSubmit, children} : ToolbarProps) => {
     return (
         <div className="deall-toolbar">
             <div className="left">
-                Filter
+                {children}
             </div>
             <div className="right">
                 <SearchBox onChange={onChange} onClick={onClick} onSubmit={onSubmit} />

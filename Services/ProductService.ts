@@ -16,4 +16,13 @@ export class ProductService extends Service{
     getProductSearch(q : any){
         return this.get(`/products/search?q=${q}`, this.response).catch((exeption) => this.catch(exeption));
     }
+
+    getProductFilter(c : any){
+        if(c){
+            return this.get(`/products/category/${c}`, this.response).catch((exeption) => this.catch(exeption));
+        }else{
+            return this.get('/products', this.response).catch((exeption) => this.catch(exeption));
+        }
+        
+    }
 }
