@@ -34,7 +34,10 @@ export default function Home() {
   const [product, setProduct] = useState([]);
   const [search, setSearch] = useState();
   const [categories, setCategories] = useState([]);
-  const [selectedCateg, setSelectedCateg] = useState('');
+  const [selectedCateg, setSelectedCateg] = useState("");
+  const [selectedBrand, setSelectedBrand] = useState("");
+  const [brands, setBrands] = useState<any>([]);
+  const [brandsCount, setBrandsCount] = useState<any>({});
 
   const productService = new ProductService();
 
@@ -46,6 +49,13 @@ export default function Home() {
   const handleCategFilter = async (c: any) => {
     const res = (await productService.getProductFilter(c)).data;
     setProduct(res.products);
+    setSelectedBrand('');
+  };
+
+  const handleBrandFilter = async (b : any) => {
+    const res = (await productService.getProductSearch(b)).data;
+    setProduct(res.products);
+    setSelectedCateg('');
   }
 
   const handleSearchChange = (e: any) => {
@@ -53,22 +63,44 @@ export default function Home() {
     setSearch(e.target.value);
   };
 
-  const handleSubmit = (e : any) => {
+  const handleSubmit = (e: any) => {
     if (e.keyCode == 13 || e.which == 13) {
       e.preventDefault();
       handleSearchClick();
     }
-  }
+  };
 
-    const handleChange = (event: SelectChangeEvent) => {
-      setSelectedCateg(event.target.value);
-      handleCategFilter(event.target.value);
-    };
+  const handleChange = (event: SelectChangeEvent) => {
+    setSelectedCateg(event.target.value);
+    handleCategFilter(event.target.value);
+  };
+
+  const handleChangeBrand = (event: SelectChangeEvent) => {
+    setSelectedBrand(event.target.value);
+    handleBrandFilter(event.target.value);
+  };
+
+  const mapBrand = (data: any) => {
+    let brand: any[] = [];
+    let counts: any = {};
+    data.map((d: any)=>{
+      brand.push(d.brand);
+    })
+    if(brand){
+      brand.forEach(function (x) { counts[x] = (counts[x] || 0) + 1; });
+      setBrandsCount(counts);
+      let uniqueBrands = brand.filter(function(b, pos) {
+        return brand.indexOf(b) == pos;
+    })
+      setBrands(uniqueBrands);
+    }
+  }
 
   useEffect(() => {
     async function getProduct() {
       const data = (await productService.getProduct()).data;
       setProduct(data.products);
+      mapBrand(data.products);
     }
 
     async function getCategories() {
@@ -80,9 +112,6 @@ export default function Home() {
   }, []);
 
   const productRows = product.map((p: any, key) => {
-    // if(p.brand === 'Apple'){
-
-    // }
     return {
       id: key,
       productName: p.title,
@@ -93,6 +122,7 @@ export default function Home() {
     };
   });
 
+  console.log(brandsCount);
   return (
     <>
       <Head>
@@ -107,14 +137,22 @@ export default function Home() {
           sidebarLogo={<>Toko Online</>}
           headerData={userData}
         >
-          {/* <div className="bg-basic-12 h-24 w-full mb-4"></div> */}
-          <Toolbar onChange={handleSearchChange} onClick={handleSearchClick} onSubmit={handleSubmit}>
-            <DeallSelect 
+          <Toolbar
+            onChange={handleSearchChange}
+            onClick={handleSearchClick}
+            onSubmit={handleSubmit}
+          >
+            <DeallSelect
               label="Categories"
               options={categories}
               value={selectedCateg}
-              handleChange = {handleChange}
-
+              handleChange={handleChange}
+            />
+            <DeallSelect
+              label="Brands"
+              options={brands}
+              value={selectedBrand}
+              handleChange={handleChangeBrand}
             />
           </Toolbar>
 
