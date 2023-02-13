@@ -1,0 +1,15 @@
+.deall-text-field{
+    @apply flex flex-row w-full justify-between mb-1;
+  
+    .deall-text-field-label{
+      font-family: Gotham-Rounded;
+      @apply flex text-xxs text-brand-text-grey items-center;
+    }
+  
+    .deall-text-field-value{
+      font-family: Gotham-Rounded-Bold;
+      @apply flex text-sm items-center;
+    }
+  
+    
+  }

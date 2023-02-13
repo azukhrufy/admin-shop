@@ -1,0 +1,39 @@
+.deall-sidebar{
+    @apply flex flex-col bg-basic-12 items-center w-20 sm:w-32 text-xxs text-brand-text-grey;
+    height: calc(100vh - 6rem);
+
+    .deall-sidebar-logo{
+        @apply py-10 pb-0 px-14 cursor-pointer;
+    }
+
+    .deall-sidebar-menus{
+        @apply flex flex-col justify-center items-center mt-20;
+
+        .deall-sidebar-menu{
+            @apply flex flex-col items-center mb-5 cursor-pointer;
+
+            svg{
+                @apply fill-brand-text-grey;
+            }
+
+            &:hover{
+                @apply text-brand-deep-ocean;
+
+                svg{
+                    @apply fill-brand-deep-ocean;
+                }
+            }
+        }
+        // .deall-sidebar-menu:last-child::before {
+        //     content: "";
+        //     @apply border w-20 border-brand-border-grey mb-5 cursor-default;
+        // }
+        // .deall-sidebar-menu:last-child{
+        //     @apply mb-0 cursor-pointer;
+        // }
+    }
+
+    .deall-sidebar-logout{
+        @apply flex flex-col items-center mt-20 cursor-pointer pb-10;
+    }
+}

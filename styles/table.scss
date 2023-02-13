@@ -1,0 +1,10 @@
+.deall-table{
+    @apply w-full h-full bg-basic-12 p-5;
+
+    .MuiDataGrid-columnHeaders{
+        .MuiDataGrid-columnHeaderTitle {
+            @apply font-bold;
+        }
+        
+    }
+}

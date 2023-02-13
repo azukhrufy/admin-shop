@@ -1,0 +1,11 @@
+.deall-footer{
+    @apply absolute bottom-0 w-full h-24 bg-basic-12 px-10 py-9 flex justify-between items-center;
+    .deall-left-footer{
+        @apply flex items-center;
+    }
+    .deall-right-footer{
+        color: #292929;
+        font-family: Gotham-rounded;
+        @apply text-sm;
+    }
+}

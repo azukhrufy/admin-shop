@@ -1,0 +1,11 @@
+.deall-toolbar{
+    @apply flex flex-row justify-between p-5 h-fit w-full bg-basic-12 items-center mb-5;
+
+    .left{
+        @apply flex flex-1;
+    }
+
+    .right{
+        @apply flex flex-1;
+    }
+}

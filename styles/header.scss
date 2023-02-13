@@ -1,0 +1,25 @@
+.deall-top-header{
+    @apply w-[calc(100vw_-_5rem)] left-20 sm:w-[calc(100vw_-_8rem)] sm:left-32 flex absolute top-0 bg-basic-12 flex-row h-20  justify-between;
+
+    .deall-header-left{
+        @apply hidden sm:flex items-center flex-row pl-16;
+    }
+
+    .deall-header-right{
+        @apply flex justify-end w-full pr-10 items-center sm:pr-20 gap-4;
+    }
+
+    .deall-persdata-text{
+
+        .subtitle{
+            @apply text-brand-text-grey text-xs;
+        }
+
+        .value{
+            font-family: Gotham-Rounded-Bold;
+            @apply text-brand-black text-sm;
+        }
+
+        @apply flex flex-col ml-5 w-44;
+    }
+}

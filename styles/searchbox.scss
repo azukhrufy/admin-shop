@@ -1,0 +1,15 @@
+.deall-searchbox{
+    @apply flex flex-row w-full h-8 bg-brand-grey text-sm py-2 px-3 rounded-lg items-center;
+
+    input{
+        @apply border-0 bg-brand-grey text-brand-text-grey w-full;
+    }
+
+    svg{
+        @apply cursor-pointer;
+    }
+
+    input:focus-visible{
+        outline: none;
+    }
+}
