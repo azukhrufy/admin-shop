@@ -33,7 +33,7 @@ const userData = {
 export default function Home() {
   const [product, setProduct] = useState<any>([]);
   const [filter, setFilter] = useState<any[]>([]);
-  const [filteredProduct, setFilteredProduct] = useState<any>([]);
+  const [allProduct, setAllProduct] = useState<any>([]);
   const [search, setSearch] = useState();
   const [categories, setCategories] = useState([]);
   const [selectedCateg, setSelectedCateg] = useState("");
@@ -78,27 +78,26 @@ export default function Home() {
     res.filter = f;
     res.key = e.target.value;
 
-    console.log(res);
-    switch (f){
-      case 'Categories':
+    switch (f) {
+      case "Categories":
         setSelectedCateg(e.target.value);
         break;
-      case 'Brands':
+      case "Brands":
         setSelectedBrand(e.target.value);
         break;
     }
-    if(filter.findIndex((o : any) => o.filter === f) >= 0){
+    if (filter.findIndex((o: any) => o.filter === f) >= 0) {
       removeFilter(f);
     }
-    if(res.key){
+    if (res.key) {
       setFilter((data: any[]) => Array.from(new Set([...data, res])));
     }
-    
-  }
+  };
 
-  const removeFilter = (f : any) => {
+  const removeFilter = (f: any) => {
+    setProduct(allProduct);
     return setFilter((data) => data.filter((d: any) => d.filter !== f));
-  }
+  };
 
   const handleSearchChange = (e: any) => {
     e.preventDefault();
@@ -144,6 +143,7 @@ export default function Home() {
     async function getProduct() {
       const data = (await productService.getProduct()).data;
       setProduct(data.products);
+      setAllProduct(data.products);
       mapBrand(data.products);
     }
 
@@ -154,6 +154,34 @@ export default function Home() {
     getProduct();
     getCategories();
   }, []);
+
+  useEffect(() => {
+    async function executeFilter(filter: any) {
+      const data = product;
+      let res: any = [];
+
+        data.map((d: any) => {
+          if (filter.filter === "Categories") {
+            if (d.category === filter.key) {
+              res.push(d);
+            }
+          }
+          if (filter.filter === "Brands") {
+            if (d.brand === filter.key) {
+              res.push(d);
+            }
+          }
+        });
+      setProduct(res);
+    }
+
+    if (filter.length > 0) {
+      console.log("masuk");
+      filter.map((f) => {
+        executeFilter(f);
+      })
+    }
+  }, [filter]);
 
   const productRows = product.map((p: any, key: any) => {
     return {
@@ -166,7 +194,7 @@ export default function Home() {
     };
   });
 
-  console.log(filter);
+  // console.log(filter);
   return (
     <>
       <Head>
@@ -190,13 +218,13 @@ export default function Home() {
               label="Categories"
               options={categories}
               value={selectedCateg}
-              handleChange={(e: any) => handleFilter('Categories', e)}
+              handleChange={(e: any) => handleFilter("Categories", e)}
             />
             <DeallSelect
               label="Brands"
               options={brands}
               value={selectedBrand}
-              handleChange={(e: any) => handleFilter('Brands', e)}
+              handleChange={(e: any) => handleFilter("Brands", e)}
             />
           </Toolbar>
 
