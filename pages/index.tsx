@@ -31,7 +31,9 @@ const userData = {
 };
 
 export default function Home() {
-  const [product, setProduct] = useState([]);
+  const [product, setProduct] = useState<any>([]);
+  const [filter, setFilter] = useState<any[]>([]);
+  const [filteredProduct, setFilteredProduct] = useState<any>([]);
   const [search, setSearch] = useState();
   const [categories, setCategories] = useState([]);
   const [selectedCateg, setSelectedCateg] = useState("");
@@ -49,13 +51,53 @@ export default function Home() {
   const handleCategFilter = async (c: any) => {
     const res = (await productService.getProductFilter(c)).data;
     setProduct(res.products);
-    setSelectedBrand('');
+    setSelectedBrand("");
   };
 
-  const handleBrandFilter = async (b : any) => {
-    const res = (await productService.getProductSearch(b)).data;
-    setProduct(res.products);
-    setSelectedCateg('');
+  const handleBrandFilter = async (b: any) => {
+    if (b) {
+      let res: any = [];
+      product.map((p: any) => {
+        if (b && p.brand == b) {
+          res.push(p);
+        }
+      });
+      if (res) {
+        console.log(res);
+        setProduct(res);
+      }
+    } else {
+      const res = (await productService.getProductSearch(b)).data;
+      setProduct(res.products);
+      setSelectedCateg("");
+    }
+  };
+
+  const handleFilter = (f: any, e: SelectChangeEvent) => {
+    let res: any = {};
+    res.filter = f;
+    res.key = e.target.value;
+
+    console.log(res);
+    switch (f){
+      case 'Categories':
+        setSelectedCateg(e.target.value);
+        break;
+      case 'Brands':
+        setSelectedBrand(e.target.value);
+        break;
+    }
+    if(filter.findIndex((o : any) => o.filter === f) >= 0){
+      removeFilter(f);
+    }
+    if(res.key){
+      setFilter((data: any[]) => Array.from(new Set([...data, res])));
+    }
+    
+  }
+
+  const removeFilter = (f : any) => {
+    return setFilter((data) => data.filter((d: any) => d.filter !== f));
   }
 
   const handleSearchChange = (e: any) => {
@@ -83,18 +125,20 @@ export default function Home() {
   const mapBrand = (data: any) => {
     let brand: any[] = [];
     let counts: any = {};
-    data.map((d: any)=>{
+    data.map((d: any) => {
       brand.push(d.brand);
-    })
-    if(brand){
-      brand.forEach(function (x) { counts[x] = (counts[x] || 0) + 1; });
+    });
+    if (brand) {
+      brand.forEach(function (x) {
+        counts[x] = (counts[x] || 0) + 1;
+      });
       setBrandsCount(counts);
-      let uniqueBrands = brand.filter(function(b, pos) {
+      let uniqueBrands = brand.filter(function (b, pos) {
         return brand.indexOf(b) == pos;
-    })
+      });
       setBrands(uniqueBrands);
     }
-  }
+  };
 
   useEffect(() => {
     async function getProduct() {
@@ -111,7 +155,7 @@ export default function Home() {
     getCategories();
   }, []);
 
-  const productRows = product.map((p: any, key) => {
+  const productRows = product.map((p: any, key: any) => {
     return {
       id: key,
       productName: p.title,
@@ -122,7 +166,7 @@ export default function Home() {
     };
   });
 
-  console.log(brandsCount);
+  console.log(filter);
   return (
     <>
       <Head>
@@ -146,13 +190,13 @@ export default function Home() {
               label="Categories"
               options={categories}
               value={selectedCateg}
-              handleChange={handleChange}
+              handleChange={(e: any) => handleFilter('Categories', e)}
             />
             <DeallSelect
               label="Brands"
               options={brands}
               value={selectedBrand}
-              handleChange={handleChangeBrand}
+              handleChange={(e: any) => handleFilter('Brands', e)}
             />
           </Toolbar>
 
