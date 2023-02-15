@@ -6,20 +6,21 @@ import { UserService } from "@/Services/UserService";
 import { GridColDef, GridRowParams } from "@mui/x-data-grid";
 import Head from "next/head";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { useRouter } from 'next/router'
-
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/router";
 
 export const Menu = [
   {
     id: "product",
     icon: MenuIcon.home,
     name: "Products",
+    path: "/",
   },
   {
     id: "cart",
     icon: MenuIcon.portfolio,
     name: "Cart",
+    path: "/cart",
   },
 ];
 
@@ -30,67 +31,88 @@ const userData = {
 };
 
 export default function Cart() {
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState<any>([]);
   const router = useRouter();
+  const [allUser, setAllUser] = useState<any>([]);
+  const [column, setColumn] = useState<GridColDef[]>([]);
+  const [row, setRow] = useState();
 
   const cartService = new CartService();
-
-//   async function getUser(id: any) {
-//     let data = (await userService.getUser(id)).data;
-//     // console.log(data.firstName + " " + data.lastName);
-//     let res = data.firstName + " " + data.lastName;
-//     return res;
-//   }
+  const userService = new UserService();
 
   useEffect(() => {
     async function getCartList() {
       const data = (await cartService.getCartList()).data;
       setCart(data.carts);
     }
+
+    async function getUsers() {
+      let data = (await userService.getAllUsers()).data;
+      console.log(data.users);
+      let res: any = [{}];
+      if (data) {
+        data.users.map((d: any) => {
+          res.push({ id: d.id, name: d.firstName + " " + d.lastName });
+        });
+        setAllUser(res);
+      }
+    }
+
     getCartList();
+    getUsers();
   }, []);
 
-  function viewDetails(row: GridRowParams): void {
-    console.log(row);
-    router.push({
-        pathname: '/cart/[id]',
-        query: { id: row.id },
-        
-      });
-  }
+  useEffect(() => {
 
+    function getUser(id: any) {
+      const user: any = allUser.filter((user: any) => user.id === id);
+      if(user.length > 0){
+        return user[0].name;
+      }
+    }
 
-  const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", hide: true },
-    { field: "user", headerName: "User ID", flex: 1 },
-    { field: "totalProduct", headerName: "Total Product", flex: 1 },
-    { field: "totalQuantity", headerName: "Total Quantity", flex: 1 },
-    {
-      field: "total",
-      headerName: "Total",
-      type: "number",
-      flex: 1,
-    },
-    {
-      field: "action",
-      headerName: "Action",
-      flex: 1,
-      sortable: false,
-      renderCell: ({ row }: Partial<GridRowParams>) => (
-        <button onClick={() => viewDetails(row)}>View</button>
-      ),
-    },
-  ];
+    const columns: GridColDef[] = [
+      { field: "id", headerName: "ID", hide: true },
+      { field: "user", headerName: "User ID", flex: 1 },
+      { field: "totalProduct", headerName: "Total Product", flex: 1 },
+      { field: "totalQuantity", headerName: "Total Quantity", flex: 1 },
+      {
+        field: "total",
+        headerName: "Total",
+        type: "number",
+        flex: 1,
+      },
+      {
+        field: "action",
+        headerName: "Action",
+        flex: 1,
+        sortable: false,
+        renderCell: ({ row }: Partial<GridRowParams>) => (
+          <button onClick={() => viewDetails(row)}>View</button>
+        ),
+      },
+    ];
 
-  const cartRows = cart.map((c: any) => {
-    return {
+    const cartRows = allUser && cart.map((c: any) => {
+      return {
         id: c.id,
-        user: c.userId,
+        user: getUser(c.userId),
         totalProduct: c.totalProducts,
         totalQuantity: c.totalQuantity,
         total: c.total,
-    };
-  });
+      };
+    });
+
+    setColumn(columns);
+    setRow(cartRows);
+  },[allUser, cart]);
+
+  function viewDetails(row: GridRowParams): void {
+    router.push({
+      pathname: "/cart/[id]",
+      query: { id: row.id },
+    });
+  }
 
   return (
     <>
@@ -107,11 +129,10 @@ export default function Cart() {
           headerData={userData}
         >
           <div className="bg-basic-12 h-24 w-full mb-4"></div>
-
-          <Table rows={cartRows} columns={columns} />
+          {column && row ? (<Table rows={row} columns={column} /> ) : (<></>)}
+          
         </BaseLayout>
       </main>
     </>
   );
 }
-

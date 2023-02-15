@@ -5,22 +5,25 @@ import Table from "@/components/Table/Table";
 import Toolbar from "@/components/Toolbar/Toolbar";
 import { columns } from "@/constant/productColumn";
 import { ProductService } from "@/Services/ProductService";
+import { TextField } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { GridColDef } from "@mui/x-data-grid";
 import Head from "next/head";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export const Menu = [
   {
     id: "product",
     icon: MenuIcon.home,
     name: "Products",
+    path: "/"
   },
   {
     id: "cart",
     icon: MenuIcon.portfolio,
     name: "Cart",
+    path: "/cart"
   },
 ];
 
@@ -31,8 +34,6 @@ const userData = {
 };
 
 export default function Home() {
-  const [product, setProduct] = useState<any>([]);
-  const [filter, setFilter] = useState<any[]>([]);
   const [allProduct, setAllProduct] = useState<any>([]);
   const [search, setSearch] = useState();
   const [categories, setCategories] = useState([]);
@@ -40,43 +41,25 @@ export default function Home() {
   const [selectedBrand, setSelectedBrand] = useState("");
   const [brands, setBrands] = useState<any>([]);
   const [brandsCount, setBrandsCount] = useState<any>({});
+  const [maxPrice, setMaxPrice] = useState();
+  const [minPrice, setMinPrice] = useState();
+
+  const product: any[] = useMemo(
+    () => allProduct
+        .filter(selectedCateg ? (data: any) => data.category === selectedCateg : (data: any) => data)
+        .filter(selectedBrand ? (data: any) => data.brand === selectedBrand : (data: any) => data)
+        .filter(maxPrice ? (data: any) => data.price <= maxPrice : (data: any) => data)
+        .filter(minPrice ? (data: any) => data.price >= minPrice : (data: any) => data)
+        .filter(search ? (data: any) => data.title.includes(search) : (data: any) => data),
+    [allProduct,selectedCateg, selectedBrand, search, maxPrice, minPrice]
+  );
 
   const productService = new ProductService();
 
-  const handleSearchClick = async () => {
-    const res = (await productService.getProductSearch(search)).data;
-    setProduct(res.products);
-  };
-
-  const handleCategFilter = async (c: any) => {
-    const res = (await productService.getProductFilter(c)).data;
-    setProduct(res.products);
-    setSelectedBrand("");
-  };
-
-  const handleBrandFilter = async (b: any) => {
-    if (b) {
-      let res: any = [];
-      product.map((p: any) => {
-        if (b && p.brand == b) {
-          res.push(p);
-        }
-      });
-      if (res) {
-        console.log(res);
-        setProduct(res);
-      }
-    } else {
-      const res = (await productService.getProductSearch(b)).data;
-      setProduct(res.products);
-      setSelectedCateg("");
-    }
-  };
-
   const handleFilter = (f: any, e: SelectChangeEvent) => {
-    let res: any = {};
-    res.filter = f;
-    res.key = e.target.value;
+    // let res: any = {};
+    // res.filter = f;
+    // res.key = e.target.value;
 
     switch (f) {
       case "Categories":
@@ -86,17 +69,6 @@ export default function Home() {
         setSelectedBrand(e.target.value);
         break;
     }
-    if (filter.findIndex((o: any) => o.filter === f) >= 0) {
-      removeFilter(f);
-    }
-    if (res.key) {
-      setFilter((data: any[]) => Array.from(new Set([...data, res])));
-    }
-  };
-
-  const removeFilter = (f: any) => {
-    setProduct(allProduct);
-    return setFilter((data) => data.filter((d: any) => d.filter !== f));
   };
 
   const handleSearchChange = (e: any) => {
@@ -104,22 +76,14 @@ export default function Home() {
     setSearch(e.target.value);
   };
 
-  const handleSubmit = (e: any) => {
-    if (e.keyCode == 13 || e.which == 13) {
-      e.preventDefault();
-      handleSearchClick();
-    }
+  const handleMinPriceChange = (e: any) => {
+    e.preventDefault();
+    setMinPrice(e.target.value);
   };
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setSelectedCateg(event.target.value);
-    handleCategFilter(event.target.value);
-  };
-
-  const handleChangeBrand = (event: SelectChangeEvent) => {
-    setSelectedBrand(event.target.value);
-    handleBrandFilter(event.target.value);
-  };
+  const handleMaxPriceChange = (e: any) => {
+    e.preventDefault();
+    setMaxPrice(e.target.value);
+  }
 
   const mapBrand = (data: any) => {
     let brand: any[] = [];
@@ -142,7 +106,6 @@ export default function Home() {
   useEffect(() => {
     async function getProduct() {
       const data = (await productService.getProduct()).data;
-      setProduct(data.products);
       setAllProduct(data.products);
       mapBrand(data.products);
     }
@@ -155,34 +118,6 @@ export default function Home() {
     getCategories();
   }, []);
 
-  useEffect(() => {
-    async function executeFilter(filter: any) {
-      const data = product;
-      let res: any = [];
-
-        data.map((d: any) => {
-          if (filter.filter === "Categories") {
-            if (d.category === filter.key) {
-              res.push(d);
-            }
-          }
-          if (filter.filter === "Brands") {
-            if (d.brand === filter.key) {
-              res.push(d);
-            }
-          }
-        });
-      setProduct(res);
-    }
-
-    if (filter.length > 0) {
-      console.log("masuk");
-      filter.map((f) => {
-        executeFilter(f);
-      })
-    }
-  }, [filter]);
-
   const productRows = product.map((p: any, key: any) => {
     return {
       id: key,
@@ -194,7 +129,6 @@ export default function Home() {
     };
   });
 
-  // console.log(filter);
   return (
     <>
       <Head>
@@ -211,8 +145,6 @@ export default function Home() {
         >
           <Toolbar
             onChange={handleSearchChange}
-            onClick={handleSearchClick}
-            onSubmit={handleSubmit}
           >
             <DeallSelect
               label="Categories"
@@ -226,6 +158,9 @@ export default function Home() {
               value={selectedBrand}
               handleChange={(e: any) => handleFilter("Brands", e)}
             />
+
+            <TextField className="w-full" id="minPrice" label="Min Price" variant="standard" onChange={handleMinPriceChange} />
+            <TextField className="w-full" id="maxPrice" label="Max Price" variant="standard" onChange={handleMaxPriceChange} />
           </Toolbar>
 
           <Table rows={productRows} columns={columns} />

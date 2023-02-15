@@ -18,7 +18,7 @@ const DeallSelect = ({value, handleChange, options, label}: DeallSelectProps) =>
 
   return (
     <div className="deall-select">
-      <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+      <FormControl variant="standard" className="w-full">
         <InputLabel id="demo-simple-select-helper-label">{label}</InputLabel>
         <Select
           labelId="demo-simple-select-standard-label"
@@ -33,7 +33,6 @@ const DeallSelect = ({value, handleChange, options, label}: DeallSelectProps) =>
             {options.map((p,key) => (
                 <MenuItem key={key} value={p}>{p}</MenuItem>
             ))}
-          
         </Select>
       </FormControl>
     </div>

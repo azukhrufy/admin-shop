@@ -2,10 +2,14 @@
     @apply flex flex-row justify-between p-5 h-fit w-full bg-basic-12 items-center mb-5;
 
     .left{
-        @apply flex flex-grow;
+        @apply flex flex-col flex-1 items-center pr-8 lg:flex-row lg:flex-grow lg:gap-3;
+
+        .deall-select{
+            @apply w-full;
+        }
     }
 
     .right{
-        @apply flex flex-1;
+        @apply flex flex-1 items-center;
     }
 }

@@ -6,7 +6,7 @@ export class UserService extends Service{
     }
 
     getAllUsers(){
-        return this.get('/users', this.response).catch((exeption) => this.catch(exeption));
+        return this.get('/users?limit=0', this.response).catch((exeption) => this.catch(exeption));
     }
 
     getUser(id : number){
