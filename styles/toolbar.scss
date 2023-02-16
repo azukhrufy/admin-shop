@@ -1,8 +1,19 @@
 .deall-toolbar{
-    @apply flex flex-row justify-between p-5 h-fit w-full bg-basic-12 items-center mb-5;
+    @apply flex flex-col lg:flex-row lg:justify-between p-5 h-fit w-full bg-basic-12 items-center mb-5;
 
     .left{
-        @apply flex flex-col flex-1 items-center pr-8 lg:flex-row lg:flex-grow lg:gap-3;
+        @apply 
+        flex 
+        flex-1 
+        items-center 
+        lg:pr-8 
+        flex-row 
+        flex-wrap
+        mb-4
+        lg:mb-0
+        lg:flex-nowrap
+        lg:flex-grow 
+        lg:gap-3;
 
         .deall-select{
             @apply w-full;
