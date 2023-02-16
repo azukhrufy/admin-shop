@@ -1,7 +1,10 @@
 import BaseLayout from "@/components/BaseLayout/BaseLayout";
+import DeallCard from "@/components/Card/Card";
+import BarChart from "@/components/Chart/BarChart/BarChart";
 import { MenuIcon } from "@/components/Icons/MenuIcons";
 import DeallSelect from "@/components/Select/Select";
 import Table from "@/components/Table/Table";
+import DeallTextField from "@/components/TextField/TextField";
 import Toolbar from "@/components/Toolbar/Toolbar";
 import { columns } from "@/constant/productColumn";
 import { useInputChange } from "@/hooks/useInputChange";
@@ -117,7 +120,6 @@ export default function Home() {
       localStorage.getItem("lastInputMinPrice")!
     );
     if (lastInputMinPrice) {
-      console.log(lastInputMinPrice);
       setMinPrice(lastInputMinPrice);
     }
     const lastInputMaxPrice = JSON.parse(
@@ -158,6 +160,25 @@ export default function Home() {
           sidebarLogo={<>Toko Online</>}
           headerData={userData}
         >
+          <div className="infograph-container mb-4 w-full flex flex-col sm:flex-row sm:gap-4 sm:mb-0">
+            <div className="graph-container flex-2">
+              <BarChart data={brandsCount} />
+            </div>
+            <div className="number-container flex flex-col flex-1 w-full gap-4">
+              <DeallCard>
+                <div className="flex flex-col flex-1 items-center justify-center text-center pt-8 pl-8 pb-8">
+                  <DeallTextField 
+                    label={'Cart Total'}
+                    value={'90'}
+                    orientation='vertical'
+                  />
+                </div>
+                <div className="flex flex-1 justify-center items-center bg-brand-cyan rounded-tr-2xl rounded-br-2xl">{MenuIcon.profile}</div>
+              </DeallCard>
+              <div className="bg-basic-12 w-full h-60">b</div>
+            </div>
+          </div>
+
           <Toolbar
             onChange={(e) => searchBox.handleChange(e, setSearch, "lastSearch")}
             initialValue={search}
@@ -183,8 +204,8 @@ export default function Home() {
                 className="w-full"
                 id="minPrice"
                 label="Min Price"
-                defaultValue={0}
                 value={minPrice}
+                placeholder="0"
                 variant="standard"
                 onChange={(e) =>
                   minPriceInput.handleChange(
@@ -200,7 +221,7 @@ export default function Home() {
                 id="maxPrice"
                 label="Max Price"
                 variant="standard"
-                defaultValue={100000}
+                placeholder="100000"
                 value={maxPrice}
                 onChange={(e) =>
                   maxPriceInput.handleChange(
@@ -212,7 +233,6 @@ export default function Home() {
               />
             </>
           </Toolbar>
-
           <Table rows={productRows} columns={columns} />
         </BaseLayout>
       </main>

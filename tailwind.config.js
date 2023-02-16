@@ -108,6 +108,7 @@ module.exports = {
 				"black" : "#292929",
 				"text-grey" : "#9E9E9E",
 				"text-green" : "#7BCC29",
+				"cyan":  "#4BC0C0",
 			},
 			"system": {
 				"link": "#046CDD",

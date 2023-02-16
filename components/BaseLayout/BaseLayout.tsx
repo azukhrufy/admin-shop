@@ -19,9 +19,9 @@ const BaseLayout = ({ menu, sidebarLogo, headerData, children }: BaseLayoutProps
       <div className="content">
         {children}
         </div>
-      <Footer
+      {/* <Footer
         rightContent="Copyrigth Deall Jobs"
-      />
+      /> */}
     </>
   );
 };

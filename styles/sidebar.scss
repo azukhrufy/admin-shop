@@ -1,6 +1,6 @@
 .deall-sidebar{
-    @apply flex flex-col bg-basic-12 items-center w-20 sm:w-32 text-xxs text-brand-text-grey;
-    height: calc(100vh - 6rem);
+    @apply flex flex-col bg-basic-12 items-center w-20 sm:w-32 text-xxs text-brand-text-grey h-[100vh];
+    // height: calc(100vh - 6rem);
 
     .deall-sidebar-logo{
         @apply py-10 pb-0 px-14 cursor-pointer;

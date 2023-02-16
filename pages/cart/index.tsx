@@ -51,7 +51,6 @@ export default function Cart() {
 
     async function getUsers() {
       let data = (await userService.getAllUsers()).data;
-      console.log(data.users);
       let res: any = [{}];
       if (data) {
         data.users.map((d: any) => {
@@ -127,7 +126,7 @@ export default function Cart() {
           headerData={userData}
         >
           <div className="bg-basic-12 h-24 w-full mb-4"></div>
-          {column && row ? (<Table rows={row} columns={column} /> ) : (<></>)}
+          {column && row ? (<Table rows={row} columns={column} pageSize={10} /> ) : (<></>)}
           
         </BaseLayout>
       </main>

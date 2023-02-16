@@ -1,6 +1,10 @@
 .deall-table{
     @apply w-full h-full bg-basic-12 p-5;
 
+    .MuiDataGrid-main {
+        @apply h-[350px];
+    }
+
     .MuiDataGrid-columnHeaders{
         .MuiDataGrid-columnHeaderTitle {
             @apply font-bold;

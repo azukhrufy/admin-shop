@@ -1,0 +1,9 @@
+.deall-card-container{
+    @apply bg-basic-12 w-full h-60 flex flex-row gap-4 rounded-2xl cursor-pointer;
+
+    svg{
+        width: 50%;
+        height: auto;
+        @apply fill-basic-12;
+    }
+}

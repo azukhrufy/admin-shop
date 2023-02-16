@@ -1,7 +1,7 @@
 import BaseLayout from "@/components/BaseLayout/BaseLayout";
 import { MenuIcon } from "@/components/Icons/MenuIcons";
 import Table from "@/components/Table/Table";
-import TextField from "@/components/TextField/TextField";
+import DeallTextField from "@/components/TextField/TextField";
 import { prodColumns } from "@/constant/productColumn";
 import { useMap } from "@/hooks/useMap";
 import { CartService } from "@/Services/CartService";
@@ -101,20 +101,20 @@ const DetailPage = () => {
             <div className="bg-basic-12 h-fit w-full mb-4 p-8">
               <div className="flex flex-row gap-4">
                 <div className="flex flex-col flex-1">
-                  <TextField label={"Cart Id"} value={cartDetail.id} />
-                  <TextField label={"User"} value={user ? user : ''} />
-                  <TextField
+                  <DeallTextField label={"Cart Id"} value={cartDetail.id} />
+                  <DeallTextField label={"User"} value={user ? user : ''} />
+                  <DeallTextField
                     label={"Total Quantity"}
                     value={cartDetail.totalQuantity}
                   />
                 </div>
                 <div className="flex flex-col flex-1">
-                  <TextField label={"Total Price"} value={cartDetail.total} />
-                  <TextField
+                  <DeallTextField label={"Total Price"} value={cartDetail.total} />
+                  <DeallTextField
                     label={"Discounted Total"}
                     value={cartDetail.discountedTotal}
                   />
-                  <TextField
+                  <DeallTextField
                     label={"Total Product"}
                     value={cartDetail.totalProducts}
                   />

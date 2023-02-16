@@ -1,0 +1,8 @@
+.chart-container{
+    @apply bg-basic-12 p-5 rounded-2xl mb-4 w-full h-[200px] sm:w-[50vw] sm:h-[500px];
+
+    canvas{
+        height: 100% !important;
+        width: 100% !important;
+    }
+}
