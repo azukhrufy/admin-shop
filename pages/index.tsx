@@ -4,6 +4,8 @@ import DeallSelect from "@/components/Select/Select";
 import Table from "@/components/Table/Table";
 import Toolbar from "@/components/Toolbar/Toolbar";
 import { columns } from "@/constant/productColumn";
+import { useInputChange } from "@/hooks/useInputChange";
+import { useSelect } from "@/hooks/useSelect";
 import { ProductService } from "@/Services/ProductService";
 import { TextField } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
@@ -44,6 +46,13 @@ export default function Home() {
   const [maxPrice, setMaxPrice] = useState();
   const [minPrice, setMinPrice] = useState();
 
+  const searchBox = useInputChange();
+  const minPriceInput = useInputChange();
+  const maxPriceInput = useInputChange();
+
+  const brandSelect = useSelect();
+  const categorySelect = useSelect();
+
   const product: any[] = useMemo(
     () => allProduct
         .filter(selectedCateg ? (data: any) => data.category === selectedCateg : (data: any) => data)
@@ -55,35 +64,6 @@ export default function Home() {
   );
 
   const productService = new ProductService();
-
-  const handleFilter = (f: any, e: SelectChangeEvent) => {
-    // let res: any = {};
-    // res.filter = f;
-    // res.key = e.target.value;
-
-    switch (f) {
-      case "Categories":
-        setSelectedCateg(e.target.value);
-        break;
-      case "Brands":
-        setSelectedBrand(e.target.value);
-        break;
-    }
-  };
-
-  const handleSearchChange = (e: any) => {
-    e.preventDefault();
-    setSearch(e.target.value);
-  };
-
-  const handleMinPriceChange = (e: any) => {
-    e.preventDefault();
-    setMinPrice(e.target.value);
-  };
-  const handleMaxPriceChange = (e: any) => {
-    e.preventDefault();
-    setMaxPrice(e.target.value);
-  }
 
   const mapBrand = (data: any) => {
     let brand: any[] = [];
@@ -144,23 +124,23 @@ export default function Home() {
           headerData={userData}
         >
           <Toolbar
-            onChange={handleSearchChange}
+            onChange={(e) => searchBox.handleChange(e, setSearch)}
           >
             <DeallSelect
               label="Categories"
               options={categories}
               value={selectedCateg}
-              handleChange={(e: any) => handleFilter("Categories", e)}
+              handleChange={(e: any) => categorySelect.handleSelect("Categories", e, setSelectedCateg)}
             />
             <DeallSelect
               label="Brands"
               options={brands}
               value={selectedBrand}
-              handleChange={(e: any) => handleFilter("Brands", e)}
+              handleChange={(e: any) => brandSelect.handleSelect("Brands", e, setSelectedBrand)}
             />
 
-            <TextField className="w-full" id="minPrice" label="Min Price" variant="standard" onChange={handleMinPriceChange} />
-            <TextField className="w-full" id="maxPrice" label="Max Price" variant="standard" onChange={handleMaxPriceChange} />
+            <TextField className="w-full" id="minPrice" label="Min Price" variant="standard" onChange={(e) => minPriceInput.handleChange(e, setMinPrice)} />
+            <TextField className="w-full" id="maxPrice" label="Max Price" variant="standard" onChange={(e) => maxPriceInput.handleChange(e, setMaxPrice)} />
           </Toolbar>
 
           <Table rows={productRows} columns={columns} />
@@ -169,3 +149,4 @@ export default function Home() {
     </>
   );
 }
+
