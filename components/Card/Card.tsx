@@ -1,12 +1,12 @@
-interface CardProps{
+interface CardProps extends React.HTMLAttributes<HTMLDivElement>{
     height?: string;
     className?: string;
     children: React.ReactNode;
 }
 
-const DeallCard = ({height,className, children} : CardProps) => {
+const DeallCard = ({height,className, children, ...defaultProps} : CardProps) => {
   return (
-    <div className={`deall-card-container h-${height} ${className}`}>
+    <div className={`deall-card-container h-${height} ${className}`} {...defaultProps}>
       {children}
     </div>
   );

@@ -2,6 +2,7 @@ import BaseLayout from "@/components/BaseLayout/BaseLayout";
 import { MenuIcon } from "@/components/Icons/MenuIcons";
 import Table from "@/components/Table/Table";
 import DeallTextField from "@/components/TextField/TextField";
+import { Menu } from "@/constant/menu";
 import { prodColumns } from "@/constant/productColumn";
 import { useMap } from "@/hooks/useMap";
 import { CartService } from "@/Services/CartService";
@@ -10,20 +11,6 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-export const Menu = [
-  {
-    id: "product",
-    icon: MenuIcon.home,
-    name: "Products",
-    path: '/'
-  },
-  {
-    id: "cart",
-    icon: MenuIcon.portfolio,
-    name: "Cart",
-    path: '/cart'
-  },
-];
 
 const userData = {
   portfolio: "130.431.449",
@@ -47,7 +34,10 @@ const DetailPage = () => {
 
   let productRows: any;
 
-   
+  const handleClick = (e : any) => {
+    e.preventDefault();
+    router.push('/cart');
+  }
 
   useEffect(() => {
     async function getCart() {
@@ -95,9 +85,17 @@ const DetailPage = () => {
         <main>
           <BaseLayout
             menu={Menu}
-            sidebarLogo={<>Toko Online</>}
+            sidebarLogo={MenuIcon.logo}
             headerData={userData}
           >
+            <div className="mb-4 w-full">
+            <div className="bg-basic-12 w-full rounded-2xl p-6">
+              <p className="flex text-xxs text-brand-text-grey items-center">
+                Cart
+              </p>
+              <p className="flex text-base items-center gap-2 font-extrabold"><span className="text-brand-brand-active cursor-pointer" onClick={handleClick}>Cart</span> / {cartDetail.id}</p>
+            </div>
+          </div>
             <div className="bg-basic-12 h-fit w-full mb-4 p-8">
               <div className="flex flex-row gap-4">
                 <div className="flex flex-col flex-1">

@@ -32,30 +32,16 @@ const BarChart = (props: any) => {
           "rgba(153, 102, 255, 1)",
           "rgba(201, 203, 207, 1)",
         ],
-        hoverOffset: 4,
+        // barThickness: 10,
       },
     ],
   };
 
   const options = {
-    // plugins:{
-    //   legend:{
-    //     position: "top",
-    //     align: "start",
-    //     labels: {
-    //       boxWidth: 7,
-    //       usePointStyle: true,
-    //       pointStyle: "circle",
-    //     }
-    //   }
-    // }
     scales:{
       xAxis:{
         display: false
       },
-      yAxis:{
-        display: false
-      }
     }
   };
   return (

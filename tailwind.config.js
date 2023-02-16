@@ -7,7 +7,6 @@ module.exports = {
   ],
 	"theme": {
 		"screens": {
-      
 			"sm": "640px",
 			"md": "768px",
 			"lg": "1024px",
@@ -109,6 +108,7 @@ module.exports = {
 				"text-grey" : "#9E9E9E",
 				"text-green" : "#7BCC29",
 				"cyan":  "#4BC0C0",
+				"brand-active": "#01ACEA",
 			},
 			"system": {
 				"link": "#046CDD",

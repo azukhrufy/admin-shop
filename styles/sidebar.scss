@@ -17,18 +17,18 @@
             }
 
             &:hover{
-                @apply text-brand-deep-ocean;
+                @apply text-brand-brand-active;
 
                 svg{
-                    @apply fill-brand-deep-ocean;
+                    @apply fill-brand-brand-active;
                 }
             }
 
             &.active{
-                @apply text-brand-deep-ocean;
+                @apply text-brand-brand-active;
 
                 svg{
-                    @apply fill-brand-deep-ocean;
+                    @apply fill-brand-brand-active;
                 }
             }
         }
@@ -36,5 +36,8 @@
 
     .deall-sidebar-logout{
         @apply flex flex-col items-center mt-20 cursor-pointer pb-10;
+        svg{
+            @apply fill-brand-text-grey;
+        }
     }
 }

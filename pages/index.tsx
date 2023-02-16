@@ -6,6 +6,7 @@ import DeallSelect from "@/components/Select/Select";
 import Table from "@/components/Table/Table";
 import DeallTextField from "@/components/TextField/TextField";
 import Toolbar from "@/components/Toolbar/Toolbar";
+import { Menu } from "@/constant/menu";
 import { columns } from "@/constant/productColumn";
 import { useInputChange } from "@/hooks/useInputChange";
 import { useMap } from "@/hooks/useMap";
@@ -14,22 +15,8 @@ import { ProductService } from "@/Services/ProductService";
 import { TextField } from "@mui/material";
 import Head from "next/head";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
-
-export const Menu = [
-  {
-    id: "product",
-    icon: MenuIcon.home,
-    name: "Products",
-    path: "/",
-  },
-  {
-    id: "cart",
-    icon: MenuIcon.portfolio,
-    name: "Cart",
-    path: "/cart",
-  },
-];
 
 const userData = {
   portfolio: "130.431.449",
@@ -48,6 +35,8 @@ export default function Home() {
   const [maxPrice, setMaxPrice] = useState("");
   const [minPrice, setMinPrice] = useState("");
 
+  const router = useRouter();
+
   const searchBox = useInputChange();
   const minPriceInput = useInputChange();
   const maxPriceInput = useInputChange();
@@ -56,6 +45,11 @@ export default function Home() {
   const categorySelect = useSelect();
 
   const brand = useMap();
+
+  const handleClick = (e: any) => {
+    e.preventDefault();
+    router.push("/cart");
+  };
 
   const product: any[] = useMemo(
     () =>
@@ -133,8 +127,6 @@ export default function Home() {
     getCategories();
   }, [minPrice, maxPrice, search, selectedBrand, selectedCateg]);
 
-  useEffect(() => {}, []);
-
   const productRows = product.map((p: any, key: any) => {
     return {
       id: key,
@@ -157,9 +149,17 @@ export default function Home() {
       <main>
         <BaseLayout
           menu={Menu}
-          sidebarLogo={<>Toko Online</>}
+          sidebarLogo={MenuIcon.logo}
           headerData={userData}
         >
+          <div className="mb-4 w-full">
+            <div className="bg-basic-12 w-full rounded-2xl p-6">
+              <p className="flex text-xxs text-brand-text-grey items-center">
+                Home
+              </p>
+              <p className="flex text-base items-center font-extrabold">Home / Product</p>
+            </div>
+          </div>
           <div className="infograph-container mb-4 w-full flex flex-col sm:flex-row sm:gap-4 sm:mb-0">
             <div className="graph-container flex-2">
               <BarChart data={brandsCount} />
@@ -167,23 +167,27 @@ export default function Home() {
             <div className="number-container flex flex-col flex-1 w-full gap-4">
               <DeallCard>
                 <div className="flex flex-col flex-1 items-center justify-center text-center pt-8 pl-8 pb-8">
-                  <DeallTextField 
-                    label={'Active User'}
-                    value={'100'}
-                    orientation='vertical'
+                  <DeallTextField
+                    label={"Active User"}
+                    value={"100"}
+                    orientation="vertical"
                   />
                 </div>
-                <div className="flex flex-1 justify-center items-center bg-brand-cyan rounded-tr-2xl rounded-br-2xl">{MenuIcon.profile}</div>
+                <div className="flex flex-1 justify-center items-center bg-brand-cyan rounded-tr-2xl rounded-br-2xl">
+                  {MenuIcon.profile}
+                </div>
               </DeallCard>
-              <DeallCard>
+              <DeallCard onClick={handleClick}>
                 <div className="flex flex-col flex-1 items-center justify-center text-center pt-8 pl-8 pb-8">
-                  <DeallTextField 
-                    label={'Total Cart'}
-                    value={'20'}
-                    orientation='vertical'
+                  <DeallTextField
+                    label={"Total Cart"}
+                    value={"20"}
+                    orientation="vertical"
                   />
                 </div>
-                <div className="flex flex-1 justify-center items-center bg-brand-orange rounded-tr-2xl rounded-br-2xl">{MenuIcon.profile}</div>
+                <div className="flex flex-1 justify-center items-center bg-brand-orange rounded-tr-2xl rounded-br-2xl">
+                  {MenuIcon.cart}
+                </div>
               </DeallCard>
             </div>
           </div>

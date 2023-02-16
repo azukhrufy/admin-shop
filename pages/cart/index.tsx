@@ -9,21 +9,8 @@ import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { useMap } from "@/hooks/useMap";
+import { Menu } from "@/constant/menu";
 
-export const Menu = [
-  {
-    id: "product",
-    icon: MenuIcon.home,
-    name: "Products",
-    path: "/",
-  },
-  {
-    id: "cart",
-    icon: MenuIcon.portfolio,
-    name: "Cart",
-    path: "/cart",
-  },
-];
 
 const userData = {
   portfolio: "130.431.449",
@@ -122,10 +109,17 @@ export default function Cart() {
       <main>
         <BaseLayout
           menu={Menu}
-          sidebarLogo={<>Toko Online</>}
+          sidebarLogo={MenuIcon.logo}
           headerData={userData}
         >
-          <div className="bg-basic-12 h-24 w-full mb-4"></div>
+          <div className="mb-4 w-full">
+            <div className="bg-basic-12 w-full rounded-2xl p-6">
+              <p className="flex text-xxs text-brand-text-grey items-center">
+                Cart
+              </p>
+              <p className="flex text-base items-center font-extrabold">Cart</p>
+            </div>
+          </div>
           {column && row ? (<Table rows={row} columns={column} pageSize={10} /> ) : (<></>)}
           
         </BaseLayout>
