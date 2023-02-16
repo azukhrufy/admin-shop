@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import { MenuIcon } from "../Icons/MenuIcons";
 
@@ -15,6 +16,7 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Sidebar = ({ menus, logo }: SidebarProps) => {
+  const router = useRouter();
   return (
     <div className="deall-sidebar">
       <div className="deall-sidebar-logo">{logo}</div>
@@ -22,7 +24,7 @@ const Sidebar = ({ menus, logo }: SidebarProps) => {
         {menus &&
           menus.map((m, id) => (
             <Link href={m.path} key={id}>
-              <div key={id} className="deall-sidebar-menu">
+              <div key={id} className={`deall-sidebar-menu ${router.asPath === m.path ? "active" : ""}`}>
                 {m.icon}
                 <p>{m.name}</p>
               </div>

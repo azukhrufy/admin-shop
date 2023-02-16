@@ -168,14 +168,23 @@ export default function Home() {
               <DeallCard>
                 <div className="flex flex-col flex-1 items-center justify-center text-center pt-8 pl-8 pb-8">
                   <DeallTextField 
-                    label={'Cart Total'}
-                    value={'90'}
+                    label={'Active User'}
+                    value={'100'}
                     orientation='vertical'
                   />
                 </div>
                 <div className="flex flex-1 justify-center items-center bg-brand-cyan rounded-tr-2xl rounded-br-2xl">{MenuIcon.profile}</div>
               </DeallCard>
-              <div className="bg-basic-12 w-full h-60">b</div>
+              <DeallCard>
+                <div className="flex flex-col flex-1 items-center justify-center text-center pt-8 pl-8 pb-8">
+                  <DeallTextField 
+                    label={'Total Cart'}
+                    value={'20'}
+                    orientation='vertical'
+                  />
+                </div>
+                <div className="flex flex-1 justify-center items-center bg-brand-orange rounded-tr-2xl rounded-br-2xl">{MenuIcon.profile}</div>
+              </DeallCard>
             </div>
           </div>
 

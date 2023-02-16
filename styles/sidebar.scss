@@ -23,14 +23,15 @@
                     @apply fill-brand-deep-ocean;
                 }
             }
+
+            &.active{
+                @apply text-brand-deep-ocean;
+
+                svg{
+                    @apply fill-brand-deep-ocean;
+                }
+            }
         }
-        // .deall-sidebar-menu:last-child::before {
-        //     content: "";
-        //     @apply border w-20 border-brand-border-grey mb-5 cursor-default;
-        // }
-        // .deall-sidebar-menu:last-child{
-        //     @apply mb-0 cursor-pointer;
-        // }
     }
 
     .deall-sidebar-logout{
