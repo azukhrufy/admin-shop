@@ -8,6 +8,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
+import { useMap } from "@/hooks/useMap";
 
 export const Menu = [
   {
@@ -40,6 +41,8 @@ export default function Cart() {
   const cartService = new CartService();
   const userService = new UserService();
 
+  const user = useMap();
+
   useEffect(() => {
     async function getCartList() {
       const data = (await cartService.getCartList()).data;
@@ -64,12 +67,7 @@ export default function Cart() {
 
   useEffect(() => {
 
-    function getUser(id: any) {
-      const user: any = allUser.filter((user: any) => user.id === id);
-      if(user.length > 0){
-        return user[0].name;
-      }
-    }
+    
 
     const columns: GridColDef[] = [
       { field: "id", headerName: "ID", hide: true },
@@ -96,7 +94,7 @@ export default function Cart() {
     const cartRows = allUser && cart.map((c: any) => {
       return {
         id: c.id,
-        user: getUser(c.userId),
+        user: user.mapUser(allUser,c.userId),
         totalProduct: c.totalProducts,
         totalQuantity: c.totalQuantity,
         total: c.total,

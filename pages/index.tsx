@@ -5,11 +5,10 @@ import Table from "@/components/Table/Table";
 import Toolbar from "@/components/Toolbar/Toolbar";
 import { columns } from "@/constant/productColumn";
 import { useInputChange } from "@/hooks/useInputChange";
+import { useMap } from "@/hooks/useMap";
 import { useSelect } from "@/hooks/useSelect";
 import { ProductService } from "@/Services/ProductService";
 import { TextField } from "@mui/material";
-import { SelectChangeEvent } from "@mui/material/Select";
-import { GridColDef } from "@mui/x-data-grid";
 import Head from "next/head";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
@@ -53,6 +52,8 @@ export default function Home() {
   const brandSelect = useSelect();
   const categorySelect = useSelect();
 
+  const brand = useMap();
+
   const product: any[] = useMemo(
     () => allProduct
         .filter(selectedCateg ? (data: any) => data.category === selectedCateg : (data: any) => data)
@@ -65,29 +66,11 @@ export default function Home() {
 
   const productService = new ProductService();
 
-  const mapBrand = (data: any) => {
-    let brand: any[] = [];
-    let counts: any = {};
-    data.map((d: any) => {
-      brand.push(d.brand);
-    });
-    if (brand) {
-      brand.forEach(function (x) {
-        counts[x] = (counts[x] || 0) + 1;
-      });
-      setBrandsCount(counts);
-      let uniqueBrands = brand.filter(function (b, pos) {
-        return brand.indexOf(b) == pos;
-      });
-      setBrands(uniqueBrands);
-    }
-  };
-
   useEffect(() => {
     async function getProduct() {
       const data = (await productService.getProduct()).data;
       setAllProduct(data.products);
-      mapBrand(data.products);
+      brand.mapBrand(data.products, setBrandsCount, setBrands);
     }
 
     async function getCategories() {

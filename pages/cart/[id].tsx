@@ -3,6 +3,7 @@ import { MenuIcon } from "@/components/Icons/MenuIcons";
 import Table from "@/components/Table/Table";
 import TextField from "@/components/TextField/TextField";
 import { prodColumns } from "@/constant/productColumn";
+import { useMap } from "@/hooks/useMap";
 import { CartService } from "@/Services/CartService";
 import { UserService } from "@/Services/UserService";
 import Head from "next/head";
