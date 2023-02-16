@@ -8,7 +8,7 @@
   
     .deall-text-field-value{
       font-family: Gotham-Rounded-Bold;
-      @apply flex text-sm items-center;
+      @apply flex text-xs sm:text-sm items-center;
     }
   
     &.vertical{

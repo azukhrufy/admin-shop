@@ -96,7 +96,7 @@ const DetailPage = () => {
               <p className="flex text-base items-center gap-2 font-extrabold"><span className="text-brand-brand-active cursor-pointer" onClick={handleClick}>Cart</span> / {cartDetail.id}</p>
             </div>
           </div>
-            <div className="bg-basic-12 h-fit w-full mb-4 p-8">
+            <div className="bg-basic-12 h-fit w-full mb-4 p-4 sm:p-8">
               <div className="flex flex-row gap-4">
                 <div className="flex flex-col flex-1">
                   <DeallTextField label={"Cart Id"} value={cartDetail.id} />
@@ -109,7 +109,7 @@ const DetailPage = () => {
                 <div className="flex flex-col flex-1">
                   <DeallTextField label={"Total Price"} value={cartDetail.total} />
                   <DeallTextField
-                    label={"Discounted Total"}
+                    label={"Disc. Total"}
                     value={cartDetail.discountedTotal}
                   />
                   <DeallTextField
