@@ -57,19 +57,21 @@ export default function Cart() {
 
     const columns: GridColDef[] = [
       { field: "id", headerName: "ID", hide: true },
-      { field: "user", headerName: "User ID", flex: 1 },
-      { field: "totalProduct", headerName: "Total Product", flex: 1 },
-      { field: "totalQuantity", headerName: "Total Quantity", flex: 1 },
+      { field: "user", headerName: "User ID", flex: 1, minWidth: 100 },
+      { field: "totalProduct", headerName: "Total Product", flex: 1, minWidth: 100 },
+      { field: "totalQuantity", headerName: "Total Quantity", flex: 1 , minWidth: 100},
       {
         field: "total",
         headerName: "Total",
         type: "number",
         flex: 1,
+        minWidth: 100
       },
       {
         field: "action",
         headerName: "Action",
         flex: 1,
+        minWidth: 100,
         sortable: false,
         renderCell: ({ row }: Partial<GridRowParams>) => (
           <button onClick={() => viewDetails(row)}>View</button>
