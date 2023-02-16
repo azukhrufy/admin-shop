@@ -8,17 +8,18 @@ interface ToolbarProps {
     onClick? : () => void;
     onSubmit? : (value: any) => void;
     children? : React.ReactNode;
+    initialValue? : string;
   }
 
 
-const Toolbar = ({onChange, onClick, onSubmit, children} : ToolbarProps) => {
+const Toolbar = ({onChange, onClick, onSubmit, children, initialValue} : ToolbarProps) => {
     return (
         <div className="deall-toolbar">
             <div className="left">
                 {children}
             </div>
             <div className="right">
-                <SearchBox onChange={onChange} onClick={onClick} onSubmit={onSubmit} />
+                <SearchBox onChange={onChange} initialValue={initialValue} onClick={onClick} onSubmit={onSubmit} />
             </div>
         </div>
     );

@@ -18,13 +18,13 @@ export const Menu = [
     id: "product",
     icon: MenuIcon.home,
     name: "Products",
-    path: "/"
+    path: "/",
   },
   {
     id: "cart",
     icon: MenuIcon.portfolio,
     name: "Cart",
-    path: "/cart"
+    path: "/cart",
   },
 ];
 
@@ -36,14 +36,14 @@ const userData = {
 
 export default function Home() {
   const [allProduct, setAllProduct] = useState<any>([]);
-  const [search, setSearch] = useState();
+  const [search, setSearch] = useState("");
   const [categories, setCategories] = useState([]);
   const [selectedCateg, setSelectedCateg] = useState("");
   const [selectedBrand, setSelectedBrand] = useState("");
   const [brands, setBrands] = useState<any>([]);
   const [brandsCount, setBrandsCount] = useState<any>({});
-  const [maxPrice, setMaxPrice] = useState();
-  const [minPrice, setMinPrice] = useState();
+  const [maxPrice, setMaxPrice] = useState("");
+  const [minPrice, setMinPrice] = useState("");
 
   const searchBox = useInputChange();
   const minPriceInput = useInputChange();
@@ -55,13 +55,30 @@ export default function Home() {
   const brand = useMap();
 
   const product: any[] = useMemo(
-    () => allProduct
-        .filter(selectedCateg ? (data: any) => data.category === selectedCateg : (data: any) => data)
-        .filter(selectedBrand ? (data: any) => data.brand === selectedBrand : (data: any) => data)
-        .filter(maxPrice ? (data: any) => data.price <= maxPrice : (data: any) => data)
-        .filter(minPrice ? (data: any) => data.price >= minPrice : (data: any) => data)
-        .filter(search ? (data: any) => data.title.includes(search) : (data: any) => data),
-    [allProduct,selectedCateg, selectedBrand, search, maxPrice, minPrice]
+    () =>
+      allProduct
+        .filter(
+          selectedCateg
+            ? (data: any) => data.category === selectedCateg
+            : (data: any) => data
+        )
+        .filter(
+          selectedBrand
+            ? (data: any) => data.brand === selectedBrand
+            : (data: any) => data
+        )
+        .filter(
+          maxPrice ? (data: any) => data.price <= maxPrice : (data: any) => data
+        )
+        .filter(
+          minPrice ? (data: any) => data.price >= minPrice : (data: any) => data
+        )
+        .filter(
+          search
+            ? (data: any) => data.title.includes(search)
+            : (data: any) => data
+        ),
+    [allProduct, selectedCateg, selectedBrand, search, maxPrice, minPrice]
   );
 
   const productService = new ProductService();
@@ -77,9 +94,44 @@ export default function Home() {
       const data = (await productService.getCategories()).data;
       setCategories(data);
     }
+
+    const lastSelectedCateg = JSON.parse(
+      localStorage.getItem("selectedCateg")!
+    );
+    if (lastSelectedCateg) {
+      setSelectedCateg(lastSelectedCateg);
+    }
+    const lastSelectedBrand = JSON.parse(
+      localStorage.getItem("selectedBrand")!
+    );
+    if (lastSelectedBrand) {
+      setSelectedBrand(lastSelectedBrand);
+    }
+
+    const lastSearch = JSON.parse(localStorage.getItem("lastSearch")!);
+    if (lastSearch) {
+      setSearch(lastSearch);
+    }
+
+    const lastInputMinPrice = JSON.parse(
+      localStorage.getItem("lastInputMinPrice")!
+    );
+    if (lastInputMinPrice) {
+      console.log(lastInputMinPrice);
+      setMinPrice(lastInputMinPrice);
+    }
+    const lastInputMaxPrice = JSON.parse(
+      localStorage.getItem("lastInputMaxPrice")!
+    );
+    if (lastInputMaxPrice) {
+      setMaxPrice(lastInputMaxPrice);
+    }
+
     getProduct();
     getCategories();
-  }, []);
+  }, [minPrice, maxPrice, search, selectedBrand, selectedCateg]);
+
+  useEffect(() => {}, []);
 
   const productRows = product.map((p: any, key: any) => {
     return {
@@ -107,23 +159,58 @@ export default function Home() {
           headerData={userData}
         >
           <Toolbar
-            onChange={(e) => searchBox.handleChange(e, setSearch)}
+            onChange={(e) => searchBox.handleChange(e, setSearch, "lastSearch")}
+            initialValue={search}
           >
-            <DeallSelect
-              label="Categories"
-              options={categories}
-              value={selectedCateg}
-              handleChange={(e: any) => categorySelect.handleSelect("Categories", e, setSelectedCateg)}
-            />
-            <DeallSelect
-              label="Brands"
-              options={brands}
-              value={selectedBrand}
-              handleChange={(e: any) => brandSelect.handleSelect("Brands", e, setSelectedBrand)}
-            />
+            <>
+              <DeallSelect
+                label="Categories"
+                options={categories}
+                value={selectedCateg}
+                handleChange={(e: any) =>
+                  categorySelect.handleSelect("Categories", e, setSelectedCateg)
+                }
+              />
+              <DeallSelect
+                label="Brands"
+                options={brands}
+                value={selectedBrand}
+                handleChange={(e: any) =>
+                  brandSelect.handleSelect("Brands", e, setSelectedBrand)
+                }
+              />
+              <TextField
+                className="w-full"
+                id="minPrice"
+                label="Min Price"
+                defaultValue={0}
+                value={minPrice}
+                variant="standard"
+                onChange={(e) =>
+                  minPriceInput.handleChange(
+                    e,
+                    setMinPrice,
+                    "lastInputMinPrice"
+                  )
+                }
+              />
 
-            <TextField className="w-full" id="minPrice" label="Min Price" variant="standard" onChange={(e) => minPriceInput.handleChange(e, setMinPrice)} />
-            <TextField className="w-full" id="maxPrice" label="Max Price" variant="standard" onChange={(e) => maxPriceInput.handleChange(e, setMaxPrice)} />
+              <TextField
+                className="w-full"
+                id="maxPrice"
+                label="Max Price"
+                variant="standard"
+                defaultValue={100000}
+                value={maxPrice}
+                onChange={(e) =>
+                  maxPriceInput.handleChange(
+                    e,
+                    setMaxPrice,
+                    "lastInputMaxPrice"
+                  )
+                }
+              />
+            </>
           </Toolbar>
 
           <Table rows={productRows} columns={columns} />
@@ -132,4 +219,3 @@ export default function Home() {
     </>
   );
 }
-

@@ -5,9 +5,11 @@ export function useSelect() {
         switch (f) {
           case "Categories":
             set(e.target.value);
+            localStorage.setItem('selectedCateg', JSON.stringify(e.target.value));
             break;
           case "Brands":
             set(e.target.value);
+            localStorage.setItem('selectedBrand', JSON.stringify(e.target.value));
             break;
         }
       };
