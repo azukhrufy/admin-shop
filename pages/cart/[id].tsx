@@ -14,11 +14,13 @@ export const Menu = [
     id: "product",
     icon: MenuIcon.home,
     name: "Products",
+    path: '/'
   },
   {
     id: "cart",
     icon: MenuIcon.portfolio,
     name: "Cart",
+    path: '/cart'
   },
 ];
 
@@ -52,7 +54,6 @@ const DetailPage = () => {
         const data = await cartService.getCart(router.query.id);
         setCartDetail(data.data);
         setProd(data.data.products);
-        console.log(data.data);
       }
     }
     getCart();

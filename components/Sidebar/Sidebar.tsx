@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import { MenuIcon } from "../Icons/MenuIcons";
 
@@ -5,6 +6,7 @@ export interface Menus {
   id: string | number;
   name: string;
   icon?: React.ReactNode | string | JSX.Element;
+  path: any;
 }
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -19,15 +21,15 @@ const Sidebar = ({ menus, logo }: SidebarProps) => {
       <div className="deall-sidebar-menus">
         {menus &&
           menus.map((m, id) => (
-            <div key={id} className="deall-sidebar-menu">
-              {m.icon}
-              <p>{m.name}</p>
-            </div>
+            <Link href={m.path} key={id}>
+              <div key={id} className="deall-sidebar-menu">
+                {m.icon}
+                <p>{m.name}</p>
+              </div>
+            </Link>
           ))}
       </div>
-      <div className="deall-sidebar-logout">
-        {MenuIcon.logout}
-      </div>
+      <div className="deall-sidebar-logout">{MenuIcon.logout}</div>
     </div>
   );
 };

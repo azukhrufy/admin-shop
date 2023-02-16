@@ -6,7 +6,7 @@ export class ProductService extends Service{
     }
 
     getProduct(){
-        return this.get('/products', this.response).catch((exeption) => this.catch(exeption));
+        return this.get('/products?limit=0', this.response).catch((exeption) => this.catch(exeption));
     }
 
     getCategories() {

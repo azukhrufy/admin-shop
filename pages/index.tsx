@@ -5,22 +5,25 @@ import Table from "@/components/Table/Table";
 import Toolbar from "@/components/Toolbar/Toolbar";
 import { columns } from "@/constant/productColumn";
 import { ProductService } from "@/Services/ProductService";
+import { TextField } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { GridColDef } from "@mui/x-data-grid";
 import Head from "next/head";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export const Menu = [
   {
     id: "product",
     icon: MenuIcon.home,
     name: "Products",
+    path: "/"
   },
   {
     id: "cart",
     icon: MenuIcon.portfolio,
     name: "Cart",
+    path: "/cart"
   },
 ];
 
@@ -31,75 +34,79 @@ const userData = {
 };
 
 export default function Home() {
-  const [product, setProduct] = useState([]);
+  const [allProduct, setAllProduct] = useState<any>([]);
   const [search, setSearch] = useState();
   const [categories, setCategories] = useState([]);
   const [selectedCateg, setSelectedCateg] = useState("");
   const [selectedBrand, setSelectedBrand] = useState("");
   const [brands, setBrands] = useState<any>([]);
   const [brandsCount, setBrandsCount] = useState<any>({});
+  const [maxPrice, setMaxPrice] = useState();
+  const [minPrice, setMinPrice] = useState();
+
+  const product: any[] = useMemo(
+    () => allProduct
+        .filter(selectedCateg ? (data: any) => data.category === selectedCateg : (data: any) => data)
+        .filter(selectedBrand ? (data: any) => data.brand === selectedBrand : (data: any) => data)
+        .filter(maxPrice ? (data: any) => data.price <= maxPrice : (data: any) => data)
+        .filter(minPrice ? (data: any) => data.price >= minPrice : (data: any) => data)
+        .filter(search ? (data: any) => data.title.includes(search) : (data: any) => data),
+    [allProduct,selectedCateg, selectedBrand, search, maxPrice, minPrice]
+  );
 
   const productService = new ProductService();
 
-  const handleSearchClick = async () => {
-    const res = (await productService.getProductSearch(search)).data;
-    setProduct(res.products);
-  };
+  const handleFilter = (f: any, e: SelectChangeEvent) => {
+    // let res: any = {};
+    // res.filter = f;
+    // res.key = e.target.value;
 
-  const handleCategFilter = async (c: any) => {
-    const res = (await productService.getProductFilter(c)).data;
-    setProduct(res.products);
-    setSelectedBrand('');
+    switch (f) {
+      case "Categories":
+        setSelectedCateg(e.target.value);
+        break;
+      case "Brands":
+        setSelectedBrand(e.target.value);
+        break;
+    }
   };
-
-  const handleBrandFilter = async (b : any) => {
-    const res = (await productService.getProductSearch(b)).data;
-    setProduct(res.products);
-    setSelectedCateg('');
-  }
 
   const handleSearchChange = (e: any) => {
     e.preventDefault();
     setSearch(e.target.value);
   };
 
-  const handleSubmit = (e: any) => {
-    if (e.keyCode == 13 || e.which == 13) {
-      e.preventDefault();
-      handleSearchClick();
-    }
+  const handleMinPriceChange = (e: any) => {
+    e.preventDefault();
+    setMinPrice(e.target.value);
   };
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setSelectedCateg(event.target.value);
-    handleCategFilter(event.target.value);
-  };
-
-  const handleChangeBrand = (event: SelectChangeEvent) => {
-    setSelectedBrand(event.target.value);
-    handleBrandFilter(event.target.value);
-  };
+  const handleMaxPriceChange = (e: any) => {
+    e.preventDefault();
+    setMaxPrice(e.target.value);
+  }
 
   const mapBrand = (data: any) => {
     let brand: any[] = [];
     let counts: any = {};
-    data.map((d: any)=>{
+    data.map((d: any) => {
       brand.push(d.brand);
-    })
-    if(brand){
-      brand.forEach(function (x) { counts[x] = (counts[x] || 0) + 1; });
+    });
+    if (brand) {
+      brand.forEach(function (x) {
+        counts[x] = (counts[x] || 0) + 1;
+      });
       setBrandsCount(counts);
-      let uniqueBrands = brand.filter(function(b, pos) {
+      let uniqueBrands = brand.filter(function (b, pos) {
         return brand.indexOf(b) == pos;
-    })
+      });
       setBrands(uniqueBrands);
     }
-  }
+  };
 
   useEffect(() => {
     async function getProduct() {
       const data = (await productService.getProduct()).data;
-      setProduct(data.products);
+      setAllProduct(data.products);
       mapBrand(data.products);
     }
 
@@ -111,7 +118,7 @@ export default function Home() {
     getCategories();
   }, []);
 
-  const productRows = product.map((p: any, key) => {
+  const productRows = product.map((p: any, key: any) => {
     return {
       id: key,
       productName: p.title,
@@ -122,7 +129,6 @@ export default function Home() {
     };
   });
 
-  console.log(brandsCount);
   return (
     <>
       <Head>
@@ -139,21 +145,22 @@ export default function Home() {
         >
           <Toolbar
             onChange={handleSearchChange}
-            onClick={handleSearchClick}
-            onSubmit={handleSubmit}
           >
             <DeallSelect
               label="Categories"
               options={categories}
               value={selectedCateg}
-              handleChange={handleChange}
+              handleChange={(e: any) => handleFilter("Categories", e)}
             />
             <DeallSelect
               label="Brands"
               options={brands}
               value={selectedBrand}
-              handleChange={handleChangeBrand}
+              handleChange={(e: any) => handleFilter("Brands", e)}
             />
+
+            <TextField className="w-full" id="minPrice" label="Min Price" variant="standard" onChange={handleMinPriceChange} />
+            <TextField className="w-full" id="maxPrice" label="Max Price" variant="standard" onChange={handleMaxPriceChange} />
           </Toolbar>
 
           <Table rows={productRows} columns={columns} />
